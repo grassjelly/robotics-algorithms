@@ -1,0 +1,14 @@
+1.) For eaech node n in the graph
+2.)	n.distance = Infinity
+
+3.) Create an empy list.
+
+4.) start.distance = 0, add start to list
+
+5.) While list not empty
+6.)	let current = node in the list with the smallest distance, remove current from list
+7.)	for each node, n that is adjacent to current
+8.)	if n.distance > current.distance + length of edge from n to current
+9.)	   n.distance = current.distance + length of edge from n to current
+10.)	   n.parent = current
+11.)	   add n to list if it isn't there already
