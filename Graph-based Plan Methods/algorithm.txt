@@ -1,14 +1,48 @@
+DIJKSTRA
+
 1.) For eaech node n in the graph
 2.)	n.distance = Infinity
-
 3.) Create an empy list.
-
 4.) start.distance = 0, add start to list
 
 5.) While list not empty
-6.)	let current = node in the list with the smallest distance, remove current from list
-7.)	for each node, n that is adjacent to current
-8.)	if n.distance > current.distance + length of edge from n to current
-9.)	   n.distance = current.distance + length of edge from n to current
-10.)	   n.parent = current
-11.)	   add n to list if it isn't there already
+6.)	  let current = node in the list with the smallest distance, remove current from list
+7.)	  for each node, n that is adjacent to current
+8.)	  if n.distance > current.distance + length of edge from n to current
+9.)	    n.distance = current.distance + length of edge from n to current
+10.)	  n.parent = current
+11.)	  add n to list if it isn't there already
+
+
+A*
+
+1.) For each node n in the graph
+2.) n.f = Infinity, n.g = Infinity
+3.) Create an empty list.
+4.) start.g = 0, start.f = H(start) add start to list.
+
+5.) While list not empty
+6.)   Let current = node in the list with the smallest f value, remove current from list
+7.)   If (current == goal node) report success
+8.)   For each node, n that is adjacent to current
+9.)	    If (n.g > (current.g + cost of edge from n to current))
+10.)		  n.g = current.g + cost of edge from n to current
+11.)		  n.f = n.g + H(n)
+12.)		  n.parent = current
+13.)		  add n to list if it isn’t there already
+
+NOTES:
+
+- In a nutshell, the main objective is to find the series of parent nodes from the end goal to the start goal.
+- Dijkstra and A* is somehow similar except how the next node to be visited is selected from the list.
+    
+    DIJKSTRA: The node which has the shortest distance from the start would be selected on the next iteration.  [min_dist, current] = min(distanceFromStart(:));
+              This tends to distribute uniformly as the difference between each nodes distance is almost similar.
+              @ALGO 9, the weight is only based on incremented number (1 cell away from the current node to the neighbor node).
+    
+    ASTAR: The node which has the shortest cost based on the sum of the neighbor's distance from the start and heuristic function (distance from goal). [min_f, current] = min(f(:));
+           The added Heuristic function adds more weight on the nodes. 
+           This means the farther the node is from the goal the less probable it would be chosen the during next iteration.
+           @ALGO 11, the weight has an additional Heuristic function (distance from neighbor node to goal).
+          
+          

@@ -85,10 +85,9 @@ while true %ALGO 5
         break;
     end;
 
-    
     % Update map
-    map(current) = 3;         % mark current node as visited ALGO6
-    distanceFromStart(current) = Inf; % remove this node from further consideration
+    map(current) = 3;         % mark current node as visited ALGO 6
+    distanceFromStart(current) = Inf; % remove this node from further consideration $ALGO 6
     
     % Compute row, column coordinates of current node
     [i, j] = ind2sub(size(distanceFromStart), current);
@@ -153,7 +152,6 @@ if (isinf(distanceFromStart(dest_node)))
     route = [];
 else
     route = [dest_node];
-    
     while (parent(route(1)) ~= 0)
         route = [parent(route(1)), route];
     end
@@ -162,7 +160,7 @@ else
     for k = 2:length(route) - 1        
         map(route(k)) = 7;
         pause(0.1);
-        image(1.5, 1.5, map);
+        image(1, 1, map);
         grid on;
         axis image;
     end

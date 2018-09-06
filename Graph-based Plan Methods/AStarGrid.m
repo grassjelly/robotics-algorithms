@@ -1,4 +1,4 @@
-function [route,numExpanded] = AStarGrid (input_map, start_coords, dest_coords)
+function [route,numExpanded] = AStarGrid (input_map, start_coords, dest_coords, drawMapEveryTime)
 % Run A* algorithm on a grid.
 % Inputs : 
 %   input_map : a logical array where the freespace cells are false or 0 and
@@ -32,12 +32,12 @@ colormap(cmap);
 
 % variable to control if the map is being visualized on every
 % iteration
-drawMapEveryTime = true;
+%drawMapEveryTime = true;
 
 [nrows, ncols] = size(input_map);
 
 % map - a table that keeps track of the state of each grid cell
-map = zeros(nrows,ncols);
+map = zeros(nrows,ncols); %ALGO 3
 
 map(~input_map) = 1;   % Mark free cells
 map(input_map)  = 2;   % Mark obstacle cells
@@ -65,18 +65,18 @@ yd = dest_coords(2);
 H = abs(X - xd) + abs(Y - yd);
 H = H';
 % Initialize cost arrays
-f = Inf(nrows,ncols);
-g = Inf(nrows,ncols);
+f = Inf(nrows,ncols); %ALGO 1-2
+g = Inf(nrows,ncols); %ALGO 1-2
 
-g(start_node) = 0;
-f(start_node) = H(start_node);
+g(start_node) = 0; %ALGO 4
+f(start_node) = H(start_node); %ALGO 4
 
 % keep track of the number of nodes that are expanded
 numExpanded = 0;
 
 % Main Loop
 
-while true
+while true %ALGO 5
     
     % Draw current map
     map(start_node) = 5;
@@ -99,8 +99,8 @@ while true
     end;
     
     % Update input_map
-    map(current) = 3;
-    f(current) = Inf; % remove this node from further consideration
+    map(current) = 3; %ALGO 6
+    f(current) = Inf; % remove this node from further consideration %ALGO 6
     
     % Compute row, column coordinates of current node
     [i, j] = ind2sub(size(f), current);
@@ -111,12 +111,54 @@ while true
     % entries in the map, f, g and parent arrays
     %
     
+    neighbors = [];
     
+    %THIS BLOCK APPENDS neighbors ARRAY for all the neighbors of the current node
     
+    %check if the current node is on the left limit of the matrix
+    if (j == 1)
+      neighbors = [neighbors, current + nrows];
+    %check if the current node is on the right limit of the matrix
+    elseif(j == nrows)
+      neighbors = [neighbors, current - nrows];
+    %otherwise it's safe to append both left and right neighbor
+    else 
+      neighbors = [neighbors, (current - nrows), (current + nrows)];
+    end;
+     
+    %check if the current node is on the upper limit of the matrix
+    if(i == 1)
+      neighbors = [neighbors, current + 1];
+    %check if the current node is on the lower limit of the matrix
+    elseif(i == ncols)
+      neighbors = [neighbors, current - 1];
+    %otherwise it's safe to append both upper and lower neighbor
+    else
+      neighbors = [neighbors, (current - 1), (current + 1)];
+    end;
     
+    if(current == dest_node) %ALGO 7
+      break;
+    end;
+      
+    for i = 1 : numel(neighbors) %ALGO8
+      index = neighbors(i);
+      element = (map(index));
+      %make sure the current neighbor doesn't hit the obstacle
+
+      if(element == 1 ||  element == 4 || element == 6 && element ~= 2)
+        if(g(index) > g(current) + 1) %ALGO 9
+          g(index) = g(current) + 1; %ALGO 10
+          f(index) = g(index) + H(index); %ALGO 11
+          parent(index) = current; %ALGO 12
+          map(index) = 4; %ALGO 13
+        end;
+      end;
+    end;    
     
+    numExpanded = numExpanded + 1;
+
     %*********************************************************************
-    
     
 end
 
