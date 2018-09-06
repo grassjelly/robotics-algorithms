@@ -152,6 +152,8 @@ if (isinf(distanceFromStart(dest_node)))
     route = [];
 else
     route = [dest_node];
+    %This backtracks the parent nodes starting from the goal node to the start node 
+    %The route list is filled up by getting the element on the parent node using the first element on the route list as its index.
     while (parent(route(1)) ~= 0)
         route = [parent(route(1)), route];
     end
