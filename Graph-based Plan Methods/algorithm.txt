@@ -42,7 +42,7 @@ NOTES:
     
     ASTAR: The node which has the shortest cost based on the sum of the neighbor's distance from the start and heuristic function (distance from goal). [min_f, current] = min(f(:));
            The added Heuristic function adds more weight on the nodes. 
-           This means the farther the node is from the goal the less probable it would be chosen the during next iteration.
+           This means the farther the node is from the goal the less probable it would be chosen during the next iteration.
            @ALGO 11, the weight has an additional Heuristic function (distance from neighbor node to goal).
           
           
