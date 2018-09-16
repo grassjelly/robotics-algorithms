@@ -1,5 +1,5 @@
 function route = DijkstraTorus (input_map, start_coords, dest_coords)
-% Run Dijkstra's algorithm on a grid.
+    % Run Dijkstra's algorithm on a grid.
 % Inputs : 
 %   input_map : a logical array where the freespace cells are false or 0 and
 %      the obstacles are true or 1
@@ -18,6 +18,8 @@ function route = DijkstraTorus (input_map, start_coords, dest_coords)
 % 5 - green - start
 % 6 - yellow - destination
 
+%REFERENCE: https://www.coursera.org/learn/robotics-motion-planning/discussions/weeks/2/threads/mWMCtkPjEeiORw7rSWiWog
+
 cmap = [1 1 1; ...
         0 0 0; ...
         1 0 0; ...
@@ -27,6 +29,10 @@ cmap = [1 1 1; ...
 
 colormap(cmap);
 
+label = true;
+
+input_map(:, 181) = [];
+input_map(181, :) = [];
 
 [nrows, ncols] = size(input_map);
 
@@ -58,11 +64,11 @@ while true
     map(start_node) = 5;
     map(dest_node) = 6;
     
-    image(1.5, 1.5, map);
-    grid on;
-    axis image;
-    drawnow;
-    
+    %image(1.5, 1.5, map);
+    %grid on;
+    %axis image;
+    %drawnow;
+%     
     % Find the node with the minimum distance
     [min_dist, current] = min(distances(:));
     
@@ -82,8 +88,47 @@ while true
    
     %%% All of your code should be between the two lines of stars. 
     % *******************************************************************
+    neighbors = [];
+    total_cells = nrows * ncols;
     
+    %THIS BLOCK APPENDS neighbors ARRAY for all the neighbors of the current node
     
+    %check if the current node is on the left limit of the matrix
+    if (j == 1)
+      neighbors = [neighbors, current + nrows, total_cells - (nrows-current)];
+    %check if the current node is on the right limit of the matrix
+    elseif(j == nrows)
+      neighbors = [neighbors, current - nrows, nrows - (total_cells - current)];
+    %otherwise it's safe to append both left and right neighbor
+    else 
+      neighbors = [neighbors, (current - nrows), (current + nrows)];
+    end;
+     
+    %check if the current node is on the upper limit of the matrix
+    if(i == 1)
+      neighbors = [neighbors, current + 1, current + (nrows-1)];
+    %check if the current node is on the lower limit of the matrix
+    elseif(i == ncols)
+      neighbors = [neighbors, current - 1, current - (nrows-1)];
+    %otherwise it's safe to append both upper and lower neighbor
+    else
+      neighbors = [neighbors, (current - 1), (current + 1)];
+    end;
+    
+    for i = 1 : numel(neighbors) %ALGO7
+      index = neighbors(i);
+      element = (map(index));
+      %make sure the current neighbor doesn't hit the obstacle
+      if(element == 1 ||  element == 4 || element == 6 && element ~= 2)
+        if(distances(index) > min_dist + 1) %ALGO 8
+          %save the edge's distance if it's better than previous one
+          distances(index) = min_dist + 1; %ALGO 9
+          parent(index) = current; %ALGO 10
+          %set current neighbor as visited
+          map(index) = 4; %ALGO 11
+        end;
+      end;
+    end;
     % *******************************************************************
 end
 
@@ -95,6 +140,7 @@ else
     while (parent(route(1)) ~= 0)
         route = [parent(route(1)), route];
     end
+    drawMap(label);
 end
 
     function update (i,j,d,p)
@@ -105,4 +151,14 @@ end
         end
     end
 
+    function drawMap(label)
+        if label==true
+        for k = 2:length(route) - 1        
+            map(route(k)) = 7;
+        end
+        image(1.5, 1.5, map);
+        grid on;
+        axis image;
+        end
+        end
 end

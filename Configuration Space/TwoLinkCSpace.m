@@ -19,7 +19,7 @@ p = patch (fv);
 p.FaceColor = 'blue';
 p.EdgeColor = 'none';
 
-hold on;
+%hold on;
 
 % These arrays define the vertices and faces of the obstacle as a patch
 obstacle.vertices = [3 3; 3 4; 4 3; -6 6; -6 8; -7 6; -8 -6; 8 -6; -8 -10; 8 -10];
