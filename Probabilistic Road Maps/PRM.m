@@ -43,12 +43,12 @@ edge_lengths = zeros(nsamples*k, 1);
 nedges = 0;
 
 
-for i = 2:nsamples
+for i = 2:nsamples %ALGO 1
     % Note that we are assuming that RandomSample returns a sample in
     % freespace
-    x = RandomSample();
+    x = RandomSample(); 
 
-    samples(:,i) = x(:);
+    samples(:,i) = x(:); %ALGO 2 and ALGO 3 RandomSample() function checks if the sample is in free space
 
     % Find the nearest neighbors
     
@@ -66,19 +66,25 @@ for i = 2:nsamples
     % you can forge an edge to any of these samples and update the edges,
     % edge_lengths and nedges variables accordingly.
     %
+    
+    %sort the calculated distances and get index of each element after sorting
+    [sorted_distances, neigh_indexes] = sort(distances); %ALGO 3
 
-    [sorted_distances, neigh_indexes] = sort(distances);
-
+    %this block ensures that the length of indices doesn't go out of range 
+    %if the calculated distances is less than required neighbors
     if(length(neigh_indexes) < k)
        max_neighbor = length(neigh_indexes);
     else
        max_neighbor = k;
     end
     
+    
     for j=1:max_neighbor
-        if(LocalPlanner(x, samples(:,neigh_indexes(j))))
-            edges(nedges + 1, :) = [i neigh_indexes(j)];
-            edge_lengths(nedges + 1, :) =  distances(neigh_indexes(j));
+        %check if every neighbor can forge a path in between
+        if(LocalPlanner(x, samples(:,neigh_indexes(j)))) %ALGO 5
+            %update the list that these are successfully joint nodes
+            edges(nedges + 1, :) = [i neigh_indexes(j)]; %ALGO 6
+            edge_lengths(nedges + 1, :) =  distances(neigh_indexes(j)); %ALGO 6
             nedges = nedges + 1;
         end
     end

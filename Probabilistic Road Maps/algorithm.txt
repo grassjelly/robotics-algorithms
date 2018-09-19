@@ -1,0 +1,6 @@
+1. Repeat n times
+2.  Generate a random point in configuration space, x
+3.  If x is in freespace
+4.    Find the k closest points in the roadmap to x according to the Dist function
+5.    Try to connect the new random sample to each of the k neighbors using the LocalPlanner procedure. 
+6.      Each successfulconnection forms a new edge in the graph.
