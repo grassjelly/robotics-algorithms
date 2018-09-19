@@ -31,15 +31,17 @@ x = RandomSample();
 % of a point in configuration space.
 samples = repmat(x(:), 1, nsamples);
 
-% edges - an array with 2 rows each column has two integer entries
+% edges - an array with 2 columns. Each row has two integer entries
 % (i, j) which encodes the fact that sample i and sample j are connected
-% by an edge. For each 
+% by an edge. 
 edges = zeros(nsamples*k, 2);
+%disp(edges);
 edge_lengths = zeros(nsamples*k, 1);
 
 % nedges - this integer keeps track of the number of edges we
 % have in the graph so far
 nedges = 0;
+
 
 for i = 2:nsamples
     % Note that we are assuming that RandomSample returns a sample in
@@ -47,7 +49,7 @@ for i = 2:nsamples
     x = RandomSample();
 
     samples(:,i) = x(:);
-    
+
     % Find the nearest neighbors
     
     % Here we assume that the Dist function can compute the
@@ -64,6 +66,22 @@ for i = 2:nsamples
     % you can forge an edge to any of these samples and update the edges,
     % edge_lengths and nedges variables accordingly.
     %
+
+    [sorted_distances, neigh_indexes] = sort(distances);
+
+    if(length(neigh_indexes) < k)
+       max_neighbor = length(neigh_indexes);
+    else
+       max_neighbor = k;
+    end
+    
+    for j=1:max_neighbor
+        if(LocalPlanner(x, samples(:,neigh_indexes(j))))
+            edges(nedges + 1, :) = [i neigh_indexes(j)];
+            edge_lengths(nedges + 1, :) =  distances(neigh_indexes(j));
+            nedges = nedges + 1;
+        end
+    end
     
     fprintf (1, 'nsamples = %d, nedges = %d\n', i, nedges);
    
